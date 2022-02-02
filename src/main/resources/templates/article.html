@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- 부트스트랩 css 사용 --> <link rel="stylesheet" href="/css/bootstrap.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+
+</head>
+<body>
+    상세페이지입니다.
+
+    <h1>제목</h1>
+    <small>username</small>
+    <p>contents</p>
+    <p>contents</p>
+    <p>contents</p>
+    <p>contents</p>
+
+<!--  댓글 작성란  -->
+    <div class="form-group">
+        <label for="input-comment">Example textarea</label>
+        <textarea class="form-control" id="input-comment" rows="3"></textarea>
+        <button type="button" class="btn btn-secondary" onclick="writeComment()">작성하기</button>
+    </div>
+<!--  댓글 표시란  -->
+    <div class="list-group" id="list-box">
+        <div class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">List group item heading</h5>
+                <small class="text-muted">3 days ago</small>
+            </div>
+            <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+            <small class="text-muted">Donec id elit non mi porta.</small><br>
+            <a href="#" class="mb-1" id="comment-edit"><small>수정</small></a>
+            <a href="#" class="mb-1" id="comment-delete"><small>삭제</small></a>
+        </div>
+    </div>
+
+</body>
+<script>
+
+    $(document).ready(function () {
+        // HTML 문서를 로드할 때마다 실행합니다.
+        getList();
+    })
+
+    function getList() {
+        // $('#list-box').empty();
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/comments',
+            success: function (response) {
+                for (let i = 0; i < response.length; i++) {
+                    let message = response[i];
+                    let id = message['id'];
+                    let username = message['userid'];
+                    let contents = message['contents'];
+                    let modifiedAt = message['modifiedAt'];
+                    addHTML(id, username, contents, modifiedAt);
+                }
+            }
+        })
+
+        function addHTML(id, username, title, contents, modifiedAt) {
+            let tempHtml = `<div class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">${username}</h5>
+                <small class="text-muted">${modifiedAt}</small>
+            </div>
+            <p class="mb-1">${contents}</p>
+            <a href="#" class="mb-1" id="${id}-comment-edit" onclick="editComment(${id})"><small>수정</small></a>
+            <a href="#" class="mb-1" id="${id}-comment-delete" onclick="deleteComment(${id})"><small>삭제</small></a>
+        </div>`
+            $('#list-box').append(tempHtml);
+        }
+    }
+
+    function writeComment() {
+        let comments = $('#input-comment').val();
+
+        $.ajax({
+            type: "POST",
+            url: "/api/comments",
+            contentType: "application/json",
+            data: JSON.stringify(comments),
+            success: function (response) {
+                alert('메시지가 성공적으로 작성되었습니다.');
+                window.location.reload();
+            }
+        });
+    }
+
+    function editComment(id) {
+
+    }
+
+    function deleteComment(id) {
+        $.ajax({
+            type: "DELETE",
+            url: `/api/comments/${id}`,
+            success: function () {
+                alert('삭제가 완료되었습니다.');
+                window.location.reload();
+            }
+        });
+    }
+
+</script>
+</html>
