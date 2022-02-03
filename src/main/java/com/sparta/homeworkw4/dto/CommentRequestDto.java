@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CommentRequestDto {
     //  본문 내용.
-    private String contents;
+    private String comments;
 }

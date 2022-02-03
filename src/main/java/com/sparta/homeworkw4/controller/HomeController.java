@@ -14,5 +14,9 @@ public class HomeController {
         return "index";
     }
 
+    @GetMapping("/api/article")
+    public String goArticle() {
+        return "article";
+    }
 
 }

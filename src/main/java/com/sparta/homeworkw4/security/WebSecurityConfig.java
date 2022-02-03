@@ -42,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/api/article").permitAll()
-                .antMatchers("/api/comments").permitAll()
+//                .antMatchers("/api/comments").permitAll()
                 .antMatchers("/user/kakao/callback").permitAll()
 
 // 그 외 어떤 요청이든 '인증'

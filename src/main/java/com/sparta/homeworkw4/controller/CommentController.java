@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
-@Controller
+@RestController
 public class CommentController {
 
     private final CommentRepository commentRepository;
@@ -29,11 +29,6 @@ public class CommentController {
         this.commentRepository = commentRepository;
     }
 
-    @GetMapping("/api/article")
-    public String goArticle() {
-        return "article";
-    }
-
 
     @GetMapping("/api/comments")
     public List<Comment> getComment() {
@@ -43,7 +38,7 @@ public class CommentController {
     }
 
     //comment 등록.
-    @ResponseBody
+//    @ResponseBody
     @PostMapping("/api/comments")
     public Comment createComment(@RequestBody CommentRequestDto requestDto,
                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
