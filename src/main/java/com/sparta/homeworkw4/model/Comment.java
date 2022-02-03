@@ -4,9 +4,11 @@ import com.sparta.homeworkw4.dto.CommentRequestDto;
 import com.sparta.homeworkw4.dto.Timestamped;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Setter
 @Getter
 @NoArgsConstructor
 @Entity
@@ -24,13 +26,13 @@ public class Comment extends Timestamped {
     @Column(nullable = false)
     private Long userId;
 
-    public Comment(String contents, Long userId) {
-        this.contents = contents;
-        this.userId = userId;
-    }
+//    public Comment(String contents, Long userId) {
+//        this.contents = contents;
+//        this.userId = userId;
+//    }
 
     public Comment(CommentRequestDto requestDto, Long userId) {
-        this.contents = contents;
+        this.contents = requestDto.getContents();
         this.userId = userId;
     }
 }

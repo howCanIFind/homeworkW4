@@ -5,25 +5,29 @@ import com.sparta.homeworkw4.model.Comment;
 import com.sparta.homeworkw4.repository.CommentRepository;
 import com.sparta.homeworkw4.security.UserDetailsImpl;
 import com.sparta.homeworkw4.service.CommentService;
+import com.sparta.homeworkw4.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RequiredArgsConstructor
-@RestController
+
+@Controller
 public class CommentController {
 
     private final CommentRepository commentRepository;
     private final CommentService commentService;
 
-//    @Autowired
-//    public CommentController(UserService userService) {
-//        this.userService = userService;
-//    }
+    @Autowired
+    public CommentController(CommentService commentService, CommentRepository commentRepository) {
+        this.commentService = commentService;
+        this.commentRepository = commentRepository;
+    }
 
     @GetMapping("/api/article")
     public String goArticle() {
@@ -39,14 +43,16 @@ public class CommentController {
     }
 
     //comment 등록.
+    @ResponseBody
     @PostMapping("/api/comments")
     public Comment createComment(@RequestBody CommentRequestDto requestDto,
                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        System.out.println("controller");
         Long userId = userDetails.getUser().getId();
-
-        Comment comment = new Comment(requestDto, userId);
-        return commentRepository.save(comment);
+        System.out.println("controller");
+        return commentService.createComment(requestDto, userId);
     }
+
 
     //comment 수정.
 

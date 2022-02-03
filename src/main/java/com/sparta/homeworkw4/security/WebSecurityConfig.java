@@ -31,12 +31,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         // 회원 관리 처리 API (POST /user/**) 에 대해 CSRF 무시
-        http.csrf()
-                .ignoringAntMatchers("/user/**");
+
+//        http.csrf()
+//                .ignoringAntMatchers("/api/comments");
 
         http.authorizeRequests()
 // 회원 관리 처리 API 전부를 login 없이 허용
+                // css 폴더를 login 없이 허용
+                .antMatchers("/css/**").permitAll()
+
                 .antMatchers("/user/**").permitAll()
+                .antMatchers("/api/article").permitAll()
+                .antMatchers("/api/comments").permitAll()
+                .antMatchers("/user/kakao/callback").permitAll()
+
 // 그 외 어떤 요청이든 '인증'
                 .anyRequest().authenticated()
                 .and()
